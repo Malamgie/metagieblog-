@@ -1,1 +1,905 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MetaGiePrompts | The Future Begins Where the Past Inspires</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #030305;
+            --glass-bg: rgba(20, 20, 25, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --accent: #d4af37; /* Soft gold */
+            --accent-glow: rgba(212, 175, 55, 0.2);
+            --text-main: #f8f8f8;
+            --text-muted: #8a8a93;
+            --font-serif: 'Playfair Display', serif;
+            --font-sans: 'Inter', sans-serif;
+            --radius-xl: 32px;
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 8px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* 2026 Animated Background Mesh */
+        .bg-mesh {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1;
+            background: #030305;
+            overflow: hidden;
+        }
+        .orb {
+            position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.4;
+            animation: floatOrb 20s infinite alternate ease-in-out;
+        }
+        .orb-1 { width: 40vw; height: 40vw; background: rgba(212, 175, 55, 0.15); top: -10%; left: -10%; }
+        .orb-2 { width: 50vw; height: 50vw; background: rgba(65, 105, 225, 0.1); bottom: -20%; right: -10%; animation-delay: -5s; }
+        
+        @keyframes floatOrb {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(5%, 10%) scale(1.1); }
+            100% { transform: translate(-5%, -5%) scale(0.9); }
+        }
+
+        h1, h2, h3, .serif { font-family: var(--font-serif); font-weight: 600; }
+        .text-gradient {
+            background: linear-gradient(135deg, #fff 0%, #a0a0a5 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .text-gold {
+            background: linear-gradient(135deg, #f9d423 0%, #ff4e50 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        
+        .glass {
+            background: var(--glass-bg); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-border); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Layout */
+        #sidebar {
+            width: 280px; height: 100vh; position: fixed; padding: 2rem;
+            display: flex; flex-direction: column; gap: 2rem;
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 100; border-right: 1px solid var(--glass-border);
+        }
+        #sidebar.hidden { transform: translateX(-100%); }
+        
+        #main-content {
+            flex: 1; margin-left: 280px; transition: margin-left 0.5s ease;
+            max-width: 1600px; margin: 0 auto; width: 100%;
+        }
+        #main-content.full-width { margin-left: 0; max-width: 100%; }
+
+        /* Buttons */
+        .btn {
+            padding: 14px 28px; border-radius: 30px; font-family: var(--font-sans);
+            font-weight: 500; cursor: pointer; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            border: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            position: relative; overflow: hidden;
+        }
+        .btn-primary { background: var(--text-main); color: var(--bg-base); }
+        .btn-primary:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 15px 30px rgba(255,255,255,0.15); }
+        .btn-glass { background: rgba(255,255,255,0.03); color: var(--text-main); border: 1px solid var(--glass-border); }
+        .btn-glass:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); transform: translateY(-2px); }
+        .btn-accent { background: var(--accent); color: #000; box-shadow: 0 4px 20px var(--accent-glow); font-weight: 600; }
+        .btn-accent:hover { box-shadow: 0 8px 30px rgba(212, 175, 55, 0.4); transform: translateY(-2px); }
+
+        /* Views */
+        .view { display: none; opacity: 0; }
+        .view.active { display: block; animation: viewFadeIn 0.6s forwards cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes viewFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* =========================================
+           2026 PREMIUM LANDING PAGE STYLES
+           ========================================= */
+        
+        .landing-nav {
+            position: fixed; top: 0; left: 0; width: 100%; padding: 20px 5%; z-index: 1000;
+            display: flex; justify-content: space-between; align-items: center;
+            background: linear-gradient(to bottom, rgba(3,3,5,0.9) 0%, rgba(3,3,5,0) 100%);
+            backdrop-filter: blur(10px); transition: all 0.3s;
+        }
+        .landing-nav .brand { font-size: 1.8rem; font-family: var(--font-serif); color: #fff; text-decoration: none; display: flex; align-items: center; gap: 10px; }
+
+        .hero-section {
+            min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; padding: 120px 5% 60px; position: relative;
+        }
+        .tag-badge {
+            background: rgba(212, 175, 55, 0.1); border: 1px solid rgba(212, 175, 55, 0.3);
+            color: var(--accent); padding: 8px 20px; border-radius: 30px; font-size: 0.9rem; font-weight: 500;
+            margin-bottom: 30px; letter-spacing: 1px; text-transform: uppercase;
+        }
+        .hero-title {
+            font-size: clamp(3.5rem, 8vw, 6.5rem); line-height: 1.05; letter-spacing: -2px; margin-bottom: 30px;
+        }
+        .hero-subtitle {
+            font-size: clamp(1.1rem, 2vw, 1.4rem); color: var(--text-muted); max-width: 700px;
+            margin-bottom: 50px; line-height: 1.6; font-weight: 300;
+        }
+        
+        .showcase-container {
+            margin-top: 80px; width: 100%; max-width: 1000px; display: flex; flex-direction: column; gap: 20px;
+            position: relative;
+        }
+        .prompt-window {
+            background: rgba(10,10,12,0.8); border: 1px solid var(--glass-border); border-radius: var(--radius-lg);
+            padding: 24px; text-align: left; position: relative; overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+        .prompt-header { display: flex; gap: 8px; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px;}
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot.r { background: #ff5f56; } .dot.y { background: #ffbd2e; } .dot.g { background: #27c93f; }
+        
+        .code-typing { font-family: monospace; font-size: 1.1rem; color: #a0a0a5; line-height: 1.6; }
+        .highlight-role { color: #c678dd; } .highlight-task { color: #61afef; } .highlight-param { color: #e5c07b; }
+
+        /* Bento Grid Layout */
+        .landing-section { padding: 120px 5%; max-width: 1400px; margin: 0 auto; }
+        .section-heading { font-size: clamp(2.5rem, 5vw, 4rem); text-align: center; margin-bottom: 20px; }
+        .section-sub { text-align: center; color: var(--text-muted); font-size: 1.2rem; margin-bottom: 80px; max-width: 600px; margin-left: auto; margin-right: auto; }
+
+        .bento-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: minmax(300px, auto); gap: 24px;
+        }
+        .bento-card {
+            background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: var(--radius-xl);
+            padding: 40px; position: relative; overflow: hidden; transition: all 0.5s ease;
+            display: flex; flex-direction: column; justify-content: flex-end;
+        }
+        .bento-card:hover { border-color: rgba(255,255,255,0.2); transform: translateY(-5px); box-shadow: 0 30px 60px rgba(0,0,0,0.4); }
+        .bento-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.05) 0%, transparent 70%); pointer-events: none;
+        }
+        .bento-large { grid-column: span 2; }
+        .bento-tall { grid-row: span 2; }
+        
+        .bento-title { font-size: 2rem; margin-bottom: 15px; font-family: var(--font-serif); }
+        .bento-desc { color: var(--text-muted); line-height: 1.6; font-size: 1.1rem; }
+        
+        .bento-icon {
+            width: 60px; height: 60px; background: rgba(255,255,255,0.05); border-radius: 20px;
+            display: flex; align-items: center; justify-content: center; margin-bottom: auto;
+            border: 1px solid var(--glass-border); color: var(--accent);
+        }
+
+        /* Economy Section */
+        .economy-wrap {
+            display: flex; align-items: center; gap: 60px; background: rgba(10,10,12,0.6);
+            border: 1px solid var(--accent-glow); border-radius: var(--radius-xl); padding: 80px;
+            position: relative; overflow: hidden;
+        }
+        .economy-wrap::after {
+            content: ''; position: absolute; right: -20%; top: -50%; width: 600px; height: 600px;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 60%); z-index: 0;
+        }
+        .economy-content { flex: 1; position: relative; z-index: 1; }
+        .coin-visual { flex: 1; position: relative; z-index: 1; display: flex; justify-content: center; }
+        .big-coin {
+            width: 250px; height: 250px; border-radius: 50%; background: linear-gradient(135deg, #f9d423, #d4af37);
+            box-shadow: 0 0 50px rgba(212, 175, 55, 0.4), inset 0 0 30px rgba(255,255,255,0.5);
+            display: flex; align-items: center; justify-content: center; font-size: 5rem; color: #fff;
+            animation: float 6s ease-in-out infinite; border: 4px solid rgba(255,255,255,0.4);
+        }
+
+        /* Footer CTA */
+        .footer-cta {
+            text-align: center; padding: 150px 5%; border-top: 1px solid var(--glass-border);
+            background: linear-gradient(to top, rgba(212, 175, 55, 0.05) 0%, transparent 100%);
+        }
+
+        /* Scroll Reveal Animation Classes */
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .delay-1 { transition-delay: 0.1s; } .delay-2 { transition-delay: 0.2s; } .delay-3 { transition-delay: 0.3s; }
+
+        /* =========================================
+           DASHBOARD & APP STYLES (Retained & Polished)
+           ========================================= */
+        
+        .nav-links { display: flex; flex-direction: column; gap: 10px; flex: 1; }
+        .nav-item {
+            padding: 12px 16px; border-radius: var(--radius-sm); color: var(--text-muted);
+            text-decoration: none; display: flex; align-items: center; gap: 12px;
+            transition: all 0.3s ease; cursor: pointer; font-size: 0.95rem;
+        }
+        .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.05); color: var(--text-main); }
+        .user-widget { padding: 16px; border-radius: var(--radius-md); text-align: center; }
+        .coin-badge {
+            display: inline-flex; align-items: center; gap: 6px; background: rgba(212, 175, 55, 0.15);
+            color: var(--accent); padding: 6px 12px; border-radius: 20px; font-weight: 600; font-size: 0.9rem;
+            border: 1px solid rgba(212, 175, 55, 0.3); margin-top: 10px;
+        }
+        
+        /* App Layout */
+        .app-padding { padding: 3rem 5%; }
+        .section-header { margin-bottom: 40px; display: flex; justify-content: space-between; align-items: flex-end; }
+        .section-header h2 { font-size: 2.5rem; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; }
+        
+        /* Prompt Card */
+        .card {
+            border-radius: var(--radius-lg); padding: 24px; display: flex; flex-direction: column; gap: 16px;
+            transition: transform 0.4s ease, border-color 0.4s ease; position: relative; overflow: hidden;
+        }
+        .card:hover { transform: translateY(-5px); border-color: rgba(255,255,255,0.2); box-shadow: 0 15px 30px rgba(0,0,0,0.3);}
+        .card-tag { position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.6); padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; border: 1px solid var(--glass-border); backdrop-filter: blur(10px);}
+        .card-img-placeholder { height: 180px; border-radius: var(--radius-sm); background: linear-gradient(135deg, #1a1a1e, #2a2a30); display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 0.9rem; border: 1px solid rgba(255,255,255,0.02);}
+        .card h3 { font-size: 1.4rem; font-family: var(--font-serif); font-weight: 600; }
+        .card p.prompt-text { font-size: 0.9rem; color: var(--text-muted); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; font-family: monospace; background: rgba(0,0,0,0.3); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--glass-border); line-height: 1.5;}
+        .card-actions { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
+        .action-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 6px; transition: color 0.2s; font-family: var(--font-sans); font-size: 0.9rem;}
+        .action-btn:hover { color: var(--text-main); }
+        .action-btn.liked { color: #ef4444; }
+        
+        /* POTD Card */
+        .potd-card { border: 1px solid rgba(212, 175, 55, 0.4); background: linear-gradient(135deg, rgba(212,175,55,0.08), rgba(0,0,0,0.6)); padding: 40px; border-radius: var(--radius-xl); margin-bottom: 50px; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.2);}
+        .potd-badge { position: absolute; top: -15px; left: 40px; background: var(--accent); color: #000; padding: 6px 20px; border-radius: 20px; font-weight: 600; font-size: 0.9rem; box-shadow: 0 4px 15px var(--accent-glow); text-transform: uppercase; letter-spacing: 1px;}
+        
+        /* Forms */
+        input, textarea { width: 100%; padding: 16px 20px; border-radius: var(--radius-sm); background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); color: white; font-family: var(--font-sans); font-size: 1rem; outline: none; transition: all 0.3s; }
+        input:focus, textarea:focus { border-color: var(--accent); background: rgba(0,0,0,0.6); box-shadow: 0 0 0 3px rgba(212,175,55,0.1); }
+        .auth-container { max-width: 440px; margin: 15vh auto; padding: 50px; border-radius: var(--radius-xl); text-align: center; }
+        .auth-container h2 { margin-bottom: 10px; font-size: 2.2rem; }
+        .auth-form { display: flex; flex-direction: column; gap: 16px; margin-top: 30px;}
+        .switch-auth { margin-top: 25px; font-size: 0.95rem; color: var(--text-muted); cursor: pointer; transition: color 0.3s; }
+        .switch-auth:hover { color: var(--accent); text-decoration: underline; }
+
+        /* Toast */
+        #toast-container { position: fixed; bottom: 30px; right: 30px; display: flex; flex-direction: column; gap: 10px; z-index: 9999; }
+        .toast { background: rgba(10,10,12,0.9); backdrop-filter: blur(10px); border: 1px solid var(--accent); padding: 16px 24px; border-radius: var(--radius-md); color: white; display: flex; align-items: center; gap: 12px; animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards, fadeOut 0.4s forwards 3s; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        @keyframes slideIn { from { transform: translateX(100%) scale(0.9); opacity: 0; } to { transform: translateX(0) scale(1); opacity: 1; } }
+        @keyframes fadeOut { to { opacity: 0; transform: translateY(20px); } }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .bento-grid { grid-template-columns: repeat(2, 1fr); }
+            .bento-large { grid-column: span 2; }
+            .economy-wrap { flex-direction: column; text-align: center; padding: 40px; }
+            .economy-wrap::after { display: none; }
+        }
+        @media (max-width: 768px) {
+            .hero-title { font-size: 2.8rem; }
+            #sidebar { transform: translateX(-100%); }
+            #main-content { margin-left: 0; }
+            .app-padding { padding: 2rem 1rem; }
+            .bento-grid { grid-template-columns: 1fr; }
+            .bento-large { grid-column: span 1; }
+            .bento-tall { grid-row: span 1; }
+            .landing-nav .brand { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-mesh">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+    </div>
+    
+    <div id="toast-container"></div>
+
+    <!-- Sidebar Navigation (Hidden on Landing) -->
+    <nav id="sidebar" class="glass hidden">
+        <a href="#" class="brand">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent);"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+            MetaGie
+        </a>
+        <div class="nav-links">
+            <div class="nav-item active" onclick="nav('dashboard')">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                Dashboard
+            </div>
+            <div class="nav-item" onclick="nav('library')">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                Prompt Library
+            </div>
+            <div class="nav-item" onclick="nav('marketplace')">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                Marketplace
+            </div>
+            <div class="nav-item" onclick="nav('university')">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+                University
+            </div>
+        </div>
+        <div class="user-widget glass">
+            <div style="font-weight: 500;" id="sidebar-username">User</div>
+            <div class="coin-badge" title="MetaCoins">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v8M8 12h8"></path></svg>
+                <span id="sidebar-coins">0</span>
+            </div>
+            <button class="btn btn-glass" style="width: 100%; margin-top: 15px; padding: 10px; font-size: 0.85rem;" onclick="logout()">Sign Out</button>
+            <a href="admin.html" id="admin-link" style="display:none; margin-top: 15px; color: var(--text-muted); font-size: 0.85rem; text-decoration: none;">Admin Console →</a>
+        </div>
+    </nav>
+
+    <main id="main-content" class="full-width">
+        
+        <!-- =========================================
+             VIEW: 2026 PREMIUM LANDING PAGE
+             ========================================= -->
+        <section id="view-landing" class="view active">
+            
+            <nav class="landing-nav">
+                <a href="#" class="brand">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--accent);"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                    MetaGie
+                </a>
+                <div style="display: flex; gap: 15px;">
+                    <button class="btn btn-glass" onclick="navView('auth')">Log In</button>
+                    <button class="btn btn-primary" onclick="navView('auth'); toggleAuthMode(true);">Get Started</button>
+                </div>
+            </nav>
+
+            <!-- Hero -->
+            <div class="hero-section">
+                <div class="tag-badge reveal">Version 2.0 Ecosystem Live</div>
+                <h1 class="hero-title reveal delay-1">The Future Begins<br><span class="serif text-gradient" style="font-style: italic;">Where the Past Inspires</span></h1>
+                <p class="hero-subtitle reveal delay-2">A high-fidelity SaaS ecosystem designed to turn AI beginners into AI-powered entrepreneurs. Discover, engineer, and trade structured prompts to accelerate your creative workflow.</p>
+                <div class="reveal delay-3" style="display: flex; gap: 20px;">
+                    <button class="btn btn-accent" style="padding: 18px 40px; font-size: 1.1rem;" onclick="navView('auth')">Enter Platform <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
+                </div>
+
+                <!-- Showcase Animation -->
+                <div class="showcase-container reveal">
+                    <div class="prompt-window">
+                        <div class="prompt-header">
+                            <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+                        </div>
+                        <div class="code-typing">
+                            <span style="color:#5c6370;">// The Amateur Approach</span><br>
+                            <span style="color:#e06c75; text-decoration: line-through;">"Write me an ad for my coffee shop."</span><br><br>
+                            
+                            <span style="color:#5c6370;">// The MetaGie Method</span><br>
+                            <span class="highlight-role">Role:</span> Expert Direct-Response Copywriter.<br>
+                            <span class="highlight-task">Task:</span> Create a 3-part Facebook ad campaign for 'BrewedAwakening'.<br>
+                            <span class="highlight-param">Constraints:</span> Use PAS framework. Max 150 words per variant. Output as JSON.<br>
+                            <span class="highlight-param">Tone:</span> Urban, persuasive, high-energy.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bento Features Grid -->
+            <div class="landing-section">
+                <h2 class="section-heading reveal"><span class="serif">Architect</span> the Perfect Workflow</h2>
+                <p class="section-sub reveal delay-1">MetaGie isn't just a prompt library. It is a complete educational and economic system built for the modern creator.</p>
+                
+                <div class="bento-grid">
+                    <!-- Feature 1 -->
+                    <div class="bento-card bento-large reveal">
+                        <div class="bento-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg></div>
+                        <h3 class="bento-title">The Prompt Library</h3>
+                        <p class="bento-desc">Access hundreds of pre-engineered prompts across Cinematic Photography, Business Strategy, Code Architecture, and Graphic Design. One click copies the exact parameters needed for million-dollar outputs.</p>
+                    </div>
+                    <!-- Feature 2 -->
+                    <div class="bento-card bento-tall reveal delay-1">
+                        <div class="bento-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg></div>
+                        <h3 class="bento-title">Prompt University</h3>
+                        <p class="bento-desc">Stop guessing. Take interactive courses ranging from basic prompt anatomy to advanced meta-prompting. Pass quizzes to earn MetaCoins.</p>
+                    </div>
+                    <!-- Feature 3 -->
+                    <div class="bento-card reveal delay-2">
+                        <div class="bento-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg></div>
+                        <h3 class="bento-title">Prompt Battle</h3>
+                        <p class="bento-desc">Participate in A/B testing of complex prompts. Vote on the superior output structure to train the algorithm and earn rewards.</p>
+                    </div>
+                    <!-- Feature 4 -->
+                    <div class="bento-card reveal">
+                        <div class="bento-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg></div>
+                        <h3 class="bento-title">The Marketplace</h3>
+                        <p class="bento-desc">Unlock premium, highly specialized workflow automations crafted by top 1% prompt engineers using your earned platform currency.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Economy Section -->
+            <div class="landing-section">
+                <div class="economy-wrap reveal">
+                    <div class="economy-content">
+                        <h2 class="bento-title" style="font-size: 3rem; margin-bottom: 20px;">The <span class="text-gold">MetaCoin</span> Economy</h2>
+                        <p class="bento-desc" style="font-size: 1.2rem; margin-bottom: 30px;">Value is created by participation. Earn MetaCoins by logging in daily, voting in prompt battles, and passing University courses. Trade them to unlock premium business toolkits.</p>
+                        <ul style="list-style: none; display: flex; flex-direction: column; gap: 15px; color: var(--text-main);">
+                            <li style="display: flex; align-items: center; gap: 10px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v8M8 12h8"></path></svg> <strong>+10 Coins</strong> Daily Login</li>
+                            <li style="display: flex; align-items: center; gap: 10px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v8M8 12h8"></path></svg> <strong>+15 Coins</strong> Passing a Quiz</li>
+                            <li style="display: flex; align-items: center; gap: 10px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v8M8 12h8"></path></svg> <strong>+25 Coins</strong> Completing Prompt of the Day</li>
+                        </ul>
+                    </div>
+                    <div class="coin-visual">
+                        <div class="big-coin">M</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer CTA -->
+            <div class="footer-cta reveal">
+                <h2 style="font-size: clamp(2.5rem, 5vw, 4rem); margin-bottom: 30px;">Stop typing.<br><span class="serif" style="font-style: italic; color: var(--accent);">Start engineering.</span></h2>
+                <button class="btn btn-primary" style="padding: 20px 50px; font-size: 1.2rem; border-radius: 40px;" onclick="navView('auth'); toggleAuthMode(true);">Create Free Account</button>
+                <p style="margin-top: 30px; color: var(--text-muted); font-size: 0.9rem;">© 2026 MetaGiePrompts. Running locally via DOM Storage.</p>
+            </div>
+
+        </section>
+
+
+        <!-- =========================================
+             VIEW: AUTHENTICATION
+             ========================================= -->
+        <section id="view-auth" class="view">
+            <nav class="landing-nav" style="background: transparent;">
+                <a href="#" class="brand" onclick="navView('landing')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Back</a>
+            </nav>
+            <div class="glass auth-container reveal">
+                <h2 id="auth-title" class="serif">Welcome Back</h2>
+                <p style="color: var(--text-muted); margin-bottom: 20px;" id="auth-subtitle">Enter your credentials to access the ecosystem.</p>
+                <form id="auth-form" class="auth-form" onsubmit="handleAuth(event)">
+                    <input type="text" id="auth-username" placeholder="Choose a Username" style="display: none;">
+                    <input type="email" id="auth-email" placeholder="Email Address" required>
+                    <input type="password" id="auth-password" placeholder="Password" required>
+                    <button type="submit" class="btn btn-accent" style="margin-top: 15px; padding: 16px; font-size: 1.1rem; border-radius: 12px;" id="auth-submit">Log In to MetaGie</button>
+                </form>
+                <p class="switch-auth" onclick="toggleAuthMode()">Don't have an account? Sign up here.</p>
+            </div>
+        </section>
+
+
+        <!-- =========================================
+             VIEW: DASHBOARD
+             ========================================= -->
+        <section id="view-dashboard" class="view app-padding">
+            <div class="section-header">
+                <div>
+                    <p style="color: var(--text-muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem;">Overview</p>
+                    <h2 id="dash-username">Creator</h2>
+                </div>
+                <button class="btn btn-primary" onclick="navView('library')">Explore Library</button>
+            </div>
+
+            <!-- POTD -->
+            <div class="glass potd-card" id="potd-container">
+                <div class="potd-badge">Prompt of the Day (+25 Coins)</div>
+                <h3 id="potd-title" class="serif" style="font-size: 2.2rem; margin-bottom: 15px;">Cinematic Product Render</h3>
+                <p id="potd-text" style="font-family: monospace; color: var(--text-muted); background: rgba(0,0,0,0.5); padding: 20px; border-radius: 12px; margin-bottom: 25px; line-height: 1.6; border: 1px solid var(--glass-border);">Loading...</p>
+                <button class="btn btn-accent" onclick="completePOTD()">Execute & Claim Reward</button>
+            </div>
+
+            <h3 class="serif" style="font-size: 1.8rem; margin-bottom: 20px;">Free Base Templates</h3>
+            <div class="grid" id="dashboard-grid">
+                <!-- Injected via JS -->
+            </div>
+        </section>
+
+
+        <!-- =========================================
+             VIEW: LIBRARY
+             ========================================= -->
+        <section id="view-library" class="view app-padding">
+            <div class="section-header" style="flex-wrap: wrap; gap: 20px;">
+                <h2>Prompt Library</h2>
+                <div style="display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px;">
+                    <button class="btn btn-glass" style="padding: 10px 20px; font-size: 0.9rem;" onclick="renderLibrary('All')">All Prompts</button>
+                    <button class="btn btn-glass" style="padding: 10px 20px; font-size: 0.9rem;" onclick="renderLibrary('Cinematic')">Cinematic</button>
+                    <button class="btn btn-glass" style="padding: 10px 20px; font-size: 0.9rem;" onclick="renderLibrary('Business')">Business Automation</button>
+                    <button class="btn btn-glass" style="padding: 10px 20px; font-size: 0.9rem;" onclick="renderLibrary('Design')">UI/UX Design</button>
+                </div>
+            </div>
+            <div class="grid" id="library-grid"></div>
+        </section>
+
+
+        <!-- =========================================
+             VIEW: MARKETPLACE
+             ========================================= -->
+        <section id="view-marketplace" class="view app-padding">
+            <div class="section-header">
+                <div>
+                    <h2>Marketplace</h2>
+                    <p style="color: var(--text-muted); margin-top: 5px;">Unlock premium chained prompts and system workflows.</p>
+                </div>
+                <div class="coin-badge" style="font-size: 1.2rem; padding: 12px 24px; border-radius: 30px;">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v8M8 12h8"></path></svg>
+                    <span id="market-coins">0</span> Balance
+                </div>
+            </div>
+            <div class="grid" id="market-grid"></div>
+        </section>
+
+
+        <!-- =========================================
+             VIEW: UNIVERSITY
+             ========================================= -->
+        <section id="view-university" class="view app-padding">
+            <div class="section-header">
+                <h2>Prompt University</h2>
+                <p style="color: var(--text-muted); margin-top: 5px;">Master the logic. Pass modules to earn ecosystem currency.</p>
+            </div>
+            
+            <div class="glass" style="padding: 40px; border-radius: var(--radius-xl); margin-bottom: 30px; position: relative; overflow: hidden;">
+                <div style="position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: var(--accent); filter: blur(80px); opacity: 0.2;"></div>
+                <h3 class="serif" style="font-size: 2rem; margin-bottom: 10px; color: var(--accent);">Module 1: Structural Anatomy</h3>
+                <p style="color: var(--text-main); margin-bottom: 30px; font-size: 1.1rem; max-width: 800px;">The biggest mistake beginners make is speaking to AI like a human search engine. AI requires structured syntax: Role, Task, Context, Constraints, and Format.</p>
+                
+                <div style="background: rgba(0,0,0,0.5); padding: 20px; border-radius: 12px; border-left: 4px solid var(--accent); margin-bottom: 30px;">
+                    <h4 style="margin-bottom: 10px;">Bad Example:</h4>
+                    <p style="color: #e06c75; font-family: monospace;">"Write a blog about AI design."</p>
+                    <h4 style="margin-bottom: 10px; margin-top: 20px;">MetaGie Structure:</h4>
+                    <p style="color: #98c379; font-family: monospace;">"Role: Senior UX Researcher. Task: Write a 1000-word blog post. Context: We are explaining glassmorphism to junior devs. Constraints: Use markdown, bold key terms. Tone: Academic but accessible."</p>
+                </div>
+                
+                <button class="btn btn-primary" onclick="takeQuiz(1)">Take Certification Quiz (+15 Coins)</button>
+            </div>
+
+            <div class="glass" style="padding: 40px; border-radius: var(--radius-xl); opacity: 0.5; filter: grayscale(1);">
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 10px;">
+                    <h3 class="serif" style="font-size: 2rem;">Module 2: Meta-Prompting</h3>
+                    <span style="font-size:0.8rem; border:1px solid #fff; padding:4px 12px; border-radius:20px;">LOCKED</span>
+                </div>
+                <p style="color: var(--text-muted);">Learn how to write prompts that generate other prompts. Automatically chain reasoning models.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        /* --- STATE & STORAGE --- */
+        const DB = {
+            get: (k) => JSON.parse(localStorage.getItem(`mgp_${k}`)),
+            set: (k, v) => localStorage.setItem(`mgp_${k}`, JSON.stringify(v))
+        };
+
+        let currentUser = null;
+        let isSignup = false;
+
+        const defaultPrompts = [
+            { id: 'p1', title: 'Cyberpunk Portrait', category: 'Cinematic', text: 'Medium shot portrait of a cyberpunk hacker in neon-lit Tokyo alley, rain, volumetric lighting, shot on 35mm lens, 8k resolution, photorealistic --ar 4:5 --v 6.0', likes: 142, isPremium: false, price: 0 },
+            { id: 'p2', title: 'SaaS Landing Page', category: 'Design', text: 'UI/UX design of a modern dark mode SaaS landing page for an AI product, glassmorphism, soft purple gradients, clean typography, Dribbble style, high resolution', likes: 89, isPremium: false, price: 0 },
+            { id: 'p3', title: 'Cold Email Acquisition', category: 'Business', text: 'Act as a top 1% B2B copywriter. Write a 3-step cold email sequence targeting CMOs of mid-sized e-commerce brands offering AI workflow automation. Use the PAS framework. Keep under 100 words per email.', likes: 256, isPremium: true, price: 50 },
+            { id: 'p4', title: 'Macro Jewelry Shot', category: 'Cinematic', text: 'Extreme macro photography of a luxury gold ring with a diamond, resting on dark velvet, cinematic dramatic studio lighting, sharp focus, octane render --ar 16:9', likes: 67, isPremium: false, price: 0 },
+            { id: 'p5', title: 'Viral TikTok System', category: 'Business', text: 'Role: TikTok Strategist. Task: Generate a 7-day content calendar for a fitness brand. Format as a table with columns: Hook (first 3s), Visual Concept, Audio type, and CTA. Focus on retention graph optimization.', likes: 310, isPremium: true, price: 75 },
+            { id: 'p6', title: 'Abstract Glassmorphism', category: 'Design', text: 'Abstract 3d rendering of frosted glass spheres floating in a dark void, neon pink and gold inner glow, soft studio lighting, Cinema4D, redshift render --ar 16:9', likes: 210, isPremium: true, price: 30 }
+        ];
+
+        /* --- INITIALIZATION --- */
+        function initApp() {
+            // Seed DB if empty
+            if (!DB.get('users')) {
+                DB.set('users', [{ id: 'u0', username: 'admin', email: 'admin@metagie.com', password: 'admin', coins: 1000, role: 'admin' }]);
+                DB.set('prompts', defaultPrompts);
+                DB.set('potd', 'p1');
+            }
+
+            // Setup scroll animations for landing page
+            setupScrollObserver();
+
+            currentUser = DB.get('currentUser');
+            
+            if (currentUser) {
+                checkDailyLogin();
+                updateUserUI();
+                navView('dashboard');
+            } else {
+                navView('landing');
+            }
+        }
+
+        function setupScrollObserver() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        }
+
+        /* --- NAVIGATION --- */
+        function navView(viewId) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            
+            if (viewId === 'landing') {
+                sidebar.classList.add('hidden');
+                mainContent.classList.add('full-width');
+            } else if (viewId === 'auth') {
+                sidebar.classList.add('hidden');
+                mainContent.classList.add('full-width');
+            } else {
+                if (!currentUser) return navView('auth'); // Protect routes
+                sidebar.classList.remove('hidden');
+                mainContent.classList.remove('full-width');
+                
+                // Highlight nav
+                const activeNav = Array.from(document.querySelectorAll('.nav-item')).find(n => n.getAttribute('onclick').includes(viewId));
+                if (activeNav) activeNav.classList.add('active');
+            }
+
+            const targetView = document.getElementById(`view-${viewId}`);
+            targetView.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Trigger specific view renders
+            if (viewId === 'dashboard') renderDashboard();
+            if (viewId === 'library') renderLibrary('All');
+            if (viewId === 'marketplace') renderMarketplace();
+        }
+
+        /* --- AUTHENTICATION --- */
+        function toggleAuthMode(forceSignup = null) {
+            isSignup = forceSignup !== null ? forceSignup : !isSignup;
+            document.getElementById('auth-title').innerText = isSignup ? 'Create Account' : 'Welcome Back';
+            document.getElementById('auth-subtitle').innerText = isSignup ? 'Join the ecosystem and get 50 Welcome Coins.' : 'Enter your credentials to access the ecosystem.';
+            document.getElementById('auth-submit').innerText = isSignup ? 'Create Free Account' : 'Log In to MetaGie';
+            document.getElementById('auth-username').style.display = isSignup ? 'block' : 'none';
+            document.querySelector('.switch-auth').innerText = isSignup ? 'Already have an account? Log in here.' : "Don't have an account? Sign up here.";
+            document.getElementById('auth-username').required = isSignup;
+        }
+
+        function handleAuth(e) {
+            e.preventDefault();
+            const email = document.getElementById('auth-email').value;
+            const pass = document.getElementById('auth-password').value;
+            const users = DB.get('users') || [];
+
+            if (isSignup) {
+                const username = document.getElementById('auth-username').value;
+                if (users.find(u => u.email === email)) return toast('Email already exists', true);
+                
+                const newUser = { id: 'u'+Date.now(), username, email, password: pass, coins: 50, role: 'user' };
+                users.push(newUser);
+                DB.set('users', users);
+                DB.set(`saves_${newUser.id}`, []);
+                DB.set(`purchases_${newUser.id}`, []);
+                
+                currentUser = newUser;
+                toast('Account created! +50 Welcome Coins');
+            } else {
+                const user = users.find(u => u.email === email && u.password === pass);
+                if (!user) return toast('Invalid credentials', true);
+                currentUser = user;
+                toast('Login successful');
+            }
+
+            DB.set('currentUser', currentUser);
+            document.getElementById('auth-form').reset();
+            checkDailyLogin();
+            updateUserUI();
+            navView('dashboard');
+        }
+
+        function logout() {
+            DB.set('currentUser', null);
+            currentUser = null;
+            navView('landing');
+        }
+
+        /* --- COINS & USER DATA --- */
+        function addCoins(amount, reason) {
+            if (!currentUser) return;
+            currentUser.coins += amount;
+            
+            const users = DB.get('users');
+            const idx = users.findIndex(u => u.id === currentUser.id);
+            if(idx > -1) { users[idx].coins = currentUser.coins; DB.set('users', users); }
+            DB.set('currentUser', currentUser);
+            
+            updateUserUI();
+            toast(`+${amount} Coins: ${reason}`);
+        }
+
+        function updateUserUI() {
+            if(!currentUser) return;
+            document.getElementById('sidebar-username').innerText = currentUser.username;
+            document.getElementById('sidebar-coins').innerText = currentUser.coins;
+            document.getElementById('dash-username').innerText = currentUser.username;
+            document.getElementById('market-coins').innerText = currentUser.coins;
+            
+            const adminLink = document.getElementById('admin-link');
+            currentUser.role === 'admin' ? adminLink.style.display = 'block' : adminLink.style.display = 'none';
+        }
+
+        function checkDailyLogin() {
+            const today = new Date().toDateString();
+            const lastLogin = DB.get(`login_${currentUser.id}`);
+            if (lastLogin !== today) {
+                addCoins(10, 'Daily Login Reward');
+                DB.set(`login_${currentUser.id}`, today);
+            }
+        }
+
+        /* --- RENDERING LOGIC --- */
+        function createCardHTML(p, isMarket = false) {
+            const saves = DB.get(`saves_${currentUser.id}`) || [];
+            const isSaved = saves.includes(p.id);
+            const purchases = DB.get(`purchases_${currentUser.id}`) || [];
+            const isOwned = !p.isPremium || purchases.includes(p.id);
+
+            let actionHTML = '';
+            if (isMarket) {
+                if (isOwned) {
+                    actionHTML = `<span style="color: var(--text-muted); font-size: 0.9rem; font-weight: 500;">Already Owned</span>`;
+                } else {
+                    actionHTML = `<button class="btn btn-accent" style="padding: 8px 16px; font-size: 0.85rem; width: 100%;" onclick="buyPrompt('${p.id}', ${p.price})">Unlock for ${p.price} Coins</button>`;
+                }
+            } else {
+                actionHTML = `
+                    <button class="action-btn ${isSaved ? 'liked' : ''}" onclick="toggleSave('${p.id}', this)">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="${isSaved ? '#ef4444' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                        <span>${p.likes}</span>
+                    </button>
+                    <button class="btn btn-glass" style="padding: 6px 12px; font-size: 0.8rem;" onclick="copyPrompt('${p.id}')">
+                        Copy Code
+                    </button>
+                `;
+            }
+
+            const displayText = isOwned ? p.text : "██████████ ██████ ███████████ ████ \n\n[ Premium prompt structure locked. Unlock in marketplace to view architecture, parameters, and formatting constraints. ]";
+
+            return `
+                <div class="card glass">
+                    <div class="card-tag">${p.category}</div>
+                    <div class="card-img-placeholder" style="background: ${getPlaceholderGradient(p.id)}">Visual Simulation</div>
+                    <h3 style="margin-top: 5px;">${p.title}</h3>
+                    <p class="prompt-text" style="${!isOwned ? 'color: #5c6370; text-align:center; display:flex; align-items:center; justify-content:center;' : ''}">${displayText}</p>
+                    <div class="card-actions" style="${isMarket ? 'justify-content: center; margin-top: 20px;' : ''}">
+                        ${actionHTML}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Generate consistent placeholder colors based on ID string
+        function getPlaceholderGradient(id) {
+            const colors = ['#1a1a1e, #2a2a30', '#18122B, #393053', '#0F2027, #203A43', '#23074d, #cc5333'];
+            const sum = id.split('').reduce((a, b) => a + b.charCodeAt(0), 0);
+            return `linear-gradient(135deg, ${colors[sum % colors.length]})`;
+        }
+
+        function renderDashboard() {
+            const prompts = DB.get('prompts') || [];
+            const potdId = DB.get('potd');
+            const potd = prompts.find(p => p.id === potdId) || prompts[0];
+            if (potd) {
+                document.getElementById('potd-title').innerText = potd.title;
+                document.getElementById('potd-text').innerText = potd.text;
+                document.getElementById('potd-container').setAttribute('data-id', potd.id);
+            }
+            const recent = prompts.filter(p => !p.isPremium).slice(0, 3);
+            document.getElementById('dashboard-grid').innerHTML = recent.map(p => createCardHTML(p)).join('');
+        }
+
+        function renderLibrary(filter) {
+            const prompts = DB.get('prompts') || [];
+            const purchases = DB.get(`purchases_${currentUser.id}`) || [];
+            let filtered = prompts.filter(p => !p.isPremium || purchases.includes(p.id));
+
+            if (filter !== 'All') filtered = filtered.filter(p => p.category === filter);
+            document.getElementById('library-grid').innerHTML = filtered.map(p => createCardHTML(p)).join('');
+        }
+
+        function renderMarketplace() {
+            const prompts = DB.get('prompts') || [];
+            const premium = prompts.filter(p => p.isPremium);
+            document.getElementById('market-grid').innerHTML = premium.map(p => createCardHTML(p, true)).join('');
+        }
+
+        /* --- INTERACTIONS --- */
+        function toggleSave(pid, btnElement) {
+            let saves = DB.get(`saves_${currentUser.id}`) || [];
+            const isSaved = saves.includes(pid);
+            const prompts = DB.get('prompts');
+            const promptIndex = prompts.findIndex(p => p.id === pid);
+
+            if (isSaved) {
+                saves = saves.filter(id => id !== pid);
+                prompts[promptIndex].likes -= 1;
+                btnElement.classList.remove('liked');
+                btnElement.querySelector('svg').setAttribute('fill', 'none');
+            } else {
+                saves.push(pid);
+                prompts[promptIndex].likes += 1;
+                btnElement.classList.add('liked');
+                btnElement.querySelector('svg').setAttribute('fill', '#ef4444');
+                addCoins(1, 'Liked a prompt');
+            }
+            
+            btnElement.querySelector('span').innerText = prompts[promptIndex].likes;
+            DB.set(`saves_${currentUser.id}`, saves);
+            DB.set('prompts', prompts);
+        }
+
+        function copyPrompt(pid) {
+            const prompts = DB.get('prompts');
+            const p = prompts.find(p => p.id === pid);
+            const textArea = document.createElement("textarea");
+            textArea.value = p.text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try { document.execCommand('copy'); toast('Structure copied to clipboard!'); } 
+            catch (err) { toast('Failed to copy', true); }
+            document.body.removeChild(textArea);
+        }
+
+        function buyPrompt(pid, price) {
+            if (currentUser.coins < price) return toast('Insufficient MetaCoins.', true);
+
+            let purchases = DB.get(`purchases_${currentUser.id}`) || [];
+            if(purchases.includes(pid)) return;
+
+            currentUser.coins -= price;
+            const users = DB.get('users');
+            const idx = users.findIndex(u => u.id === currentUser.id);
+            users[idx].coins = currentUser.coins;
+            DB.set('users', users);
+            DB.set('currentUser', currentUser);
+
+            purchases.push(pid);
+            DB.set(`purchases_${currentUser.id}`, purchases);
+
+            updateUserUI();
+            renderMarketplace();
+            toast(`Purchase successful! Asset added to Library.`);
+        }
+
+        function completePOTD() {
+            const pid = document.getElementById('potd-container').getAttribute('data-id');
+            const key = `potd_done_${currentUser.id}_${new Date().toDateString()}`;
+            if (DB.get(key)) return toast('Already executed today!', true);
+
+            addCoins(25, 'POTD Executed');
+            DB.set(key, true);
+            copyPrompt(pid);
+        }
+
+        function takeQuiz(level) {
+            const ans = confirm("Certification Question:\n\nWhich parameter dictates the specific format of the AI's output?\n\nOK = The 'Constraints/Format' block\nCancel = The 'Role' block");
+            if (ans) {
+                const key = `quiz_${level}_${currentUser.id}`;
+                if(!DB.get(key)) {
+                    addCoins(15, 'Passed Module 1');
+                    DB.set(key, true);
+                } else {
+                    toast('Certification already achieved!');
+                }
+            } else {
+                toast('Incorrect mapping. Review the lesson.', true);
+            }
+        }
+
+        /* --- UTILS --- */
+        function toast(msg, isError = false) {
+            const c = document.getElementById('toast-container');
+            const t = document.createElement('div');
+            t.className = 'toast';
+            if(isError) t.style.borderColor = '#ef4444';
+            t.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="${isError ? '#ef4444' : 'var(--accent)'}" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v4M12 16h.01"></path></svg> <span>${msg}</span>`;
+            c.appendChild(t);
+            setTimeout(() => { if(t.parentElement) t.remove(); }, 3400);
+        }
+
+        window.onload = initApp;
+    </script>
+</body>
+                  </html>
