@@ -10,7 +10,7 @@
             --bg-base: #030305;
             --glass-bg: rgba(20, 20, 25, 0.6);
             --glass-border: rgba(255, 255, 255, 0.08);
-            --accent: #2563EB; 
+            --accent: #2563EB; /* Admin uses a structured blue accent */
             --text-main: #f8f8f8;
             --text-muted: #a0a0a5;
             --font-serif: 'Playfair Display', serif;
@@ -19,98 +19,186 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: var(--font-sans); background-color: var(--bg-base); color: var(--text-main); display: flex; min-height: 100vh; overflow-x: hidden; }
-        .glass { background: var(--glass-bg); backdrop-filter: blur(24px); border: 1px solid var(--glass-border); border-radius: var(--radius-md); }
+        
+        body {
+            font-family: var(--font-sans); background-color: var(--bg-base); color: var(--text-main);
+            display: flex; min-height: 100vh; overflow-x: hidden;
+        }
 
+        .glass {
+            background: var(--glass-bg); backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-border); border-radius: var(--radius-md);
+        }
+
+        /* Sidebar */
         #sidebar { width: 280px; padding: 2.5rem 2rem; border-right: 1px solid var(--glass-border); display: flex; flex-direction: column; gap: 1rem; background: rgba(5,5,7,0.9); z-index: 10;}
         .brand { font-family: var(--font-serif); font-size: 1.6rem; color: #fff; text-decoration: none; margin-bottom: 2.5rem; display:flex; align-items: center; gap: 10px;}
         .nav-item { padding: 14px 16px; border-radius: 8px; color: var(--text-muted); cursor: pointer; transition: 0.3s; font-size: 0.95rem; font-weight: 500;}
         .nav-item:hover, .nav-item.active { background: rgba(37, 99, 235, 0.1); color: var(--accent); }
 
+        /* Main Content */
         main { flex: 1; padding: 4rem 5%; overflow-y: auto; position: relative;}
+        
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; }
         h1 { font-family: var(--font-serif); font-weight: 600; font-size: 2.5rem; }
 
+        /* Stats Grid */
         .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 4rem; }
         .stat-card { padding: 30px; text-align: left; position: relative; overflow: hidden;}
+        .stat-card::after { content: ''; position: absolute; right: -20px; bottom: -20px; width: 100px; height: 100px; background: rgba(37, 99, 235, 0.1); filter: blur(30px); border-radius: 50%; }
         .stat-card h3 { color: var(--text-muted); font-size: 0.95rem; font-weight: 500; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px;}
         .stat-card .value { font-size: 3rem; font-weight: 600; font-family: var(--font-serif); }
 
+        /* Tables */
         table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
         th, td { padding: 18px 20px; text-align: left; border-bottom: 1px solid var(--glass-border); }
         th { color: var(--text-muted); font-weight: 500; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
         tr:hover { background: rgba(255,255,255,0.02); }
 
+        /* Forms & Inputs */
         .form-group { margin-bottom: 1.5rem; }
         label { display: block; margin-bottom: 10px; font-size: 0.9rem; color: var(--text-muted); font-weight: 500;}
-        input, select, textarea { width: 100%; padding: 14px 16px; border-radius: 8px; background: rgba(0,0,0,0.5); border: 1px solid var(--glass-border); color: white; font-family: var(--font-sans); outline: none; transition: 0.3s; }
+        input, select, textarea { 
+            width: 100%; padding: 14px 16px; border-radius: 8px; background: rgba(0,0,0,0.5); 
+            border: 1px solid var(--glass-border); color: white; font-family: var(--font-sans); outline: none; transition: 0.3s;
+        }
         input:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);}
         
         .btn { padding: 12px 24px; border-radius: 8px; border: none; cursor: pointer; font-weight: 500; font-family: var(--font-sans); transition: 0.3s; }
         .btn-primary { background: var(--accent); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2); }
         .btn-danger { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); padding: 8px 16px; font-size: 0.85rem; }
+        .btn-danger:hover { background: #ef4444; color: white; }
         
         .view { display: none; }
-        .view.active { display: block; }
+        .view.active { display: block; animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes fadeIn { from { opacity:0; transform: translateY(15px);} to { opacity:1; transform: translateY(0);} }
+        
         .badge { background: rgba(37, 99, 235, 0.15); border: 1px solid rgba(37, 99, 235, 0.3); color: var(--accent); padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 500;}
     </style>
 </head>
 <body>
 
     <nav id="sidebar" class="glass">
-        <a href="#" class="brand">MetaGie Admin</a>
+        <a href="#" class="brand">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--accent);"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            MetaGie Admin
+        </a>
         <div class="nav-item active" onclick="nav('overview')">System Overview</div>
         <div class="nav-item" onclick="nav('users')">User Management</div>
         <div class="nav-item" onclick="nav('prompts')">Asset Database</div>
         <div style="margin-top: auto; border-top: 1px solid var(--glass-border); padding-top: 20px;">
-            <a href="app.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">Exit Console</a>
+            <a href="app.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 8px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                Exit Console
+            </a>
         </div>
     </nav>
 
     <main>
+        <!-- View: Overview -->
         <section id="view-overview" class="view active">
-            <div class="header"><h1>Platform Analytics</h1></div>
+            <div class="header">
+                <h1>Platform Analytics</h1>
+            </div>
             <div class="stats-grid">
-                <div class="stat-card glass"><h3>Registered Accounts</h3><div class="value" id="stat-users">0</div></div>
-                <div class="stat-card glass"><h3>Database Assets</h3><div class="value" id="stat-prompts">0</div></div>
-                <div class="stat-card glass"><h3>Total Economy Volume</h3><div class="value" id="stat-coins">0</div></div>
+                <div class="stat-card glass">
+                    <h3>Registered Accounts</h3>
+                    <div class="value" id="stat-users">0</div>
+                </div>
+                <div class="stat-card glass">
+                    <h3>Database Assets</h3>
+                    <div class="value" id="stat-prompts">0</div>
+                </div>
+                <div class="stat-card glass">
+                    <h3>Total Economy Volume</h3>
+                    <div class="value" id="stat-coins">0</div>
+                </div>
+            </div>
+            
+            <div class="glass" style="padding: 30px; margin-bottom: 40px;">
+                <h2 style="margin-bottom: 25px; font-size: 1.4rem; font-family: var(--font-serif);">Ecosystem Controls</h2>
+                <div style="display: flex; gap: 15px; align-items: flex-end;">
+                    <div style="flex: 1;">
+                        <label>Featured Prompt of the Day</label>
+                        <select id="potd-select"></select>
+                    </div>
+                    <button class="btn btn-primary" onclick="setPOTD()">Push Update</button>
+                </div>
             </div>
         </section>
 
+        <!-- View: Users -->
         <section id="view-users" class="view">
-            <div class="header"><h1>User Management</h1></div>
+            <div class="header">
+                <h1>User Management</h1>
+            </div>
             <div class="glass" style="padding: 0; overflow-x: auto;">
                 <table>
-                    <thead><tr><th>Username</th><th>Email</th><th>Role</th><th>University Lvl</th><th>Coins</th><th>Actions</th></tr></thead>
+                    <thead>
+                        <tr>
+                            <th>UUID</th>
+                            <th>Username</th>
+                            <th>Email Address</th>
+                            <th>Privilege</th>
+                            <th>Economy Balance</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
                     <tbody id="users-tbody"></tbody>
                 </table>
             </div>
         </section>
 
+        <!-- View: Prompts -->
         <section id="view-prompts" class="view">
             <div class="header">
                 <h1>Prompt Database</h1>
                 <button class="btn btn-primary" onclick="document.getElementById('add-prompt-form').style.display='block'">+ Inject New Asset</button>
             </div>
 
+            <!-- Add Form -->
             <div id="add-prompt-form" class="glass" style="padding: 40px; margin-bottom: 40px; display: none;">
+                <h3 style="margin-bottom: 25px; font-size: 1.5rem; font-family: var(--font-serif);">Inject Architecture</h3>
                 <form onsubmit="addPrompt(event)">
                     <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
                         <div class="form-group"><label>Asset Title</label><input type="text" id="p-title" required></div>
-                        <div class="form-group"><label>Category</label><select id="p-cat"><option>Business</option><option>Cinematic</option><option>Design</option></select></div>
+                        <div class="form-group">
+                            <label>Domain Category</label>
+                            <select id="p-cat">
+                                <option>Business</option><option>Cinematic</option><option>Design</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="form-group"><label>Raw Architecture Text (Prompt)</label><textarea id="p-text" rows="5" required></textarea></div>
-                    <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 30px;">
-                        <label><input type="checkbox" id="p-premium" onchange="document.getElementById('p-price').disabled = !this.checked"> Lock behind Marketplace (Premium)</label>
-                        <input type="number" id="p-price" placeholder="Value in MetaCoins" disabled style="width: 200px;">
+                    <div class="form-group">
+                        <label>Raw Architecture Text (Prompt)</label>
+                        <textarea id="p-text" rows="5" required></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary">Commit to Database</button>
+                    <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 30px; background: rgba(0,0,0,0.3); padding: 20px; border-radius: 8px; border: 1px solid var(--glass-border);">
+                        <label style="margin: 0; display:flex; align-items:center; gap:10px; cursor:pointer;">
+                            <input type="checkbox" id="p-premium" onchange="document.getElementById('p-price').disabled = !this.checked" style="width:20px; height:20px;"> 
+                            Lock behind Marketplace (Premium)
+                        </label>
+                        <input type="number" id="p-price" placeholder="Value in MetaCoins" disabled style="width: 200px; margin-left: auto;">
+                    </div>
+                    <div style="display: flex; gap: 15px;">
+                        <button type="submit" class="btn btn-primary">Commit to Database</button>
+                        <button type="button" class="btn" style="background: rgba(255,255,255,0.05); color: white;" onclick="document.getElementById('add-prompt-form').style.display='none'">Cancel</button>
+                    </div>
                 </form>
             </div>
 
             <div class="glass" style="padding: 0; overflow-x: auto;">
                 <table>
-                    <thead><tr><th>Asset Title</th><th>Domain</th><th>Likes</th><th>Economy State</th><th>Actions</th></tr></thead>
+                    <thead>
+                        <tr>
+                            <th>Asset Title</th>
+                            <th>Domain</th>
+                            <th>Usage/Likes</th>
+                            <th>Economy State</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
                     <tbody id="prompts-tbody"></tbody>
                 </table>
             </div>
@@ -126,7 +214,7 @@
         function initAdmin() {
             const currentUser = DB.get('currentUser');
             if (!currentUser || currentUser.role !== 'admin') {
-                document.body.innerHTML = '<div style="padding:100px; text-align:center;"><h2>Unauthorized Access.</h2><a href="app.html">Return to App</a></div>';
+                document.body.innerHTML = '<div style="padding:100px; text-align:center; height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center;"><h2 style="font-family:var(--font-serif); font-size:2rem;">Unauthorized Access.</h2><p style="color:var(--text-muted); margin:20px 0;">Admin privileges required to view this console.</p><a href="app.html" style="color:var(--accent); padding:10px 20px; border:1px solid var(--accent); border-radius:8px; text-decoration:none;">Return to App</a></div>';
                 return;
             }
             loadData();
@@ -143,47 +231,61 @@
             const users = DB.get('users') || [];
             const prompts = DB.get('prompts') || [];
 
+            // Stats
             document.getElementById('stat-users').innerText = users.length;
             document.getElementById('stat-prompts').innerText = prompts.length;
             document.getElementById('stat-coins').innerText = users.reduce((sum, u) => sum + (u.coins || 0), 0);
 
+            // Users Table
             document.getElementById('users-tbody').innerHTML = users.map(u => `
                 <tr>
+                    <td style="font-family:monospace; font-size:0.8rem; color:var(--text-muted)">${u.id}</td>
                     <td style="font-weight:500;">${u.username}</td>
                     <td style="color:var(--text-muted);">${u.email}</td>
-                    <td><span class="badge">${u.role.toUpperCase()}</span></td>
-                    <td><strong>Lvl ${u.level || 1}</strong></td>
-                    <td><input type="number" value="${u.coins}" id="coin-${u.id}" style="width:100px; padding:8px;">
-                        <button class="btn btn-primary" style="padding:8px;" onclick="updateCoins('${u.id}')">Sync</button></td>
-                    <td>${u.role !== 'admin' ? `<button class="btn btn-danger" onclick="deleteUser('${u.id}')">Remove</button>` : 'Root User'}</td>
+                    <td><span class="badge" style="background: ${u.role==='admin'?'rgba(239, 68, 68, 0.1)':'rgba(37, 99, 235, 0.1)'}; color: ${u.role==='admin'?'#ef4444':'var(--accent)'}; border-color:${u.role==='admin'?'rgba(239, 68, 68, 0.3)':'rgba(37, 99, 235, 0.3)'};">${u.role.toUpperCase()}</span></td>
+                    <td>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <input type="number" value="${u.coins}" id="coin-${u.id}" style="width:100px; padding:8px;">
+                            <button class="btn btn-primary" style="padding:8px 16px; font-size:0.85rem;" onclick="updateCoins('${u.id}')">Sync</button>
+                        </div>
+                    </td>
+                    <td>
+                        ${u.role !== 'admin' ? `<button class="btn btn-danger" onclick="deleteUser('${u.id}')">Remove</button>` : '<span style="color:var(--text-muted); font-size:0.8rem;">Root User</span>'}
+                    </td>
                 </tr>
             `).join('');
 
+            // Prompts Table
             document.getElementById('prompts-tbody').innerHTML = prompts.map(p => `
                 <tr>
-                    <td style="font-weight:500;">${p.title}</td>
-                    <td>${p.category}</td>
+                    <td style="font-weight:500; max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${p.title}</td>
+                    <td style="color:var(--text-muted);">${p.category}</td>
                     <td>${p.likes}</td>
-                    <td>${p.isPremium ? `<span class="badge" style="color:#d4af37;">${p.price} Coins</span>` : '<span class="badge">Free</span>'}</td>
+                    <td>${p.isPremium ? `<span class="badge" style="color:#d4af37; background:rgba(212, 175, 55, 0.1); border-color:rgba(212,175,55,0.3);">${p.price} Coins</span>` : '<span class="badge" style="color:#27c93f; background:rgba(39, 201, 63, 0.1); border-color:rgba(39, 201, 63, 0.3);">Free Base</span>'}</td>
                     <td><button class="btn btn-danger" onclick="deletePrompt('${p.id}')">Delete</button></td>
                 </tr>
             `).join('');
+
+            // POTD Select
+            const currentPotd = DB.get('potd');
+            document.getElementById('potd-select').innerHTML = prompts.map(p => `<option value="${p.id}" ${p.id === currentPotd ? 'selected' : ''}>${p.title} (${p.category})</option>`).join('');
         }
 
         function updateCoins(uid) {
             const users = DB.get('users');
             const userIndex = users.findIndex(u => u.id === uid);
-            users[userIndex].coins = parseInt(document.getElementById(`coin-${uid}`).value);
+            const newCoins = parseInt(document.getElementById(`coin-${uid}`).value);
+            users[userIndex].coins = newCoins;
             DB.set('users', users);
             
             const current = DB.get('currentUser');
-            if(current.id === uid) { current.coins = users[userIndex].coins; DB.set('currentUser', current); }
+            if(current.id === uid) { current.coins = newCoins; DB.set('currentUser', current); }
             alert('Economy balance synchronized.');
             loadData();
         }
 
         function deleteUser(uid) {
-            if(!confirm('Irrevocably remove this user?')) return;
+            if(!confirm('Irrevocably remove this user from the database?')) return;
             DB.set('users', DB.get('users').filter(u => u.id !== uid));
             loadData();
         }
@@ -198,7 +300,7 @@
             e.preventDefault();
             const prompts = DB.get('prompts') || [];
             const isPremium = document.getElementById('p-premium').checked;
-            prompts.unshift({
+            const newPrompt = {
                 id: 'p' + Date.now(),
                 title: document.getElementById('p-title').value,
                 category: document.getElementById('p-cat').value,
@@ -206,11 +308,19 @@
                 likes: 0,
                 isPremium: isPremium,
                 price: isPremium ? parseInt(document.getElementById('p-price').value || 0) : 0
-            });
+            };
+            prompts.unshift(newPrompt);
             DB.set('prompts', prompts);
+            
             e.target.reset();
+            document.getElementById('p-price').disabled = true;
             document.getElementById('add-prompt-form').style.display = 'none';
             loadData();
+        }
+
+        function setPOTD() {
+            DB.set('potd', document.getElementById('potd-select').value);
+            alert('Featured Architecture updated successfully.');
         }
 
         window.onload = initAdmin;
